@@ -10,7 +10,7 @@ public class RoomDto {
     private String type;
     private Long basePrice;
     private String[] photos;
-    private String amenities;
+    private String[] amenities;
     private Integer totalCount;
     private Integer capacity;
 }

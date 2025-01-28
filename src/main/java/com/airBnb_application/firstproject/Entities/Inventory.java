@@ -1,8 +1,7 @@
 package com.airBnb_application.firstproject.Entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,6 +17,9 @@ import java.time.LocalDateTime;
                 name= "Unique_constraints",
                 columnNames = {"hotel_id", "room_id","date"}
         ))
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Inventory {
 
     @Id
