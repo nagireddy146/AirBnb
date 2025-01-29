@@ -29,6 +29,7 @@ public class HotelServiceImpl implements HotelService{
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final InventoryService inventoryService;
+    private final RoomService roomService;
 
     @Override
     public HotelDto createNewHotel(HotelDto hotelDto) {
@@ -72,6 +73,7 @@ public class HotelServiceImpl implements HotelService{
                 orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id "   +id));
         for(Room room : hotel.getRooms()){
             inventoryService.deleteFutureInventoryOfRoom(room);
+            roomService.deleteRoomById(hotel.getId(), room.getId());
         }
 
         hotelRepository.deleteById(id);
