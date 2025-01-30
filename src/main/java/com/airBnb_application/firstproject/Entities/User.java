@@ -2,8 +2,7 @@ package com.airBnb_application.firstproject.Entities;
 
 import com.airBnb_application.firstproject.Entities.Enums.Roles;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -11,6 +10,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name ="app_user")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
