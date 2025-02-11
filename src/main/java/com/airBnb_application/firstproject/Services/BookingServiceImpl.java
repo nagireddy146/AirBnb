@@ -6,10 +6,12 @@ import com.airBnb_application.firstproject.DTO.GuestDto;
 import com.airBnb_application.firstproject.Entities.*;
 import com.airBnb_application.firstproject.Entities.Enums.BookingStatus;
 import com.airBnb_application.firstproject.Exception.ResourceNotFoundException;
+import com.airBnb_application.firstproject.Exception.UnautorizedException;
 import com.airBnb_application.firstproject.Repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,8 +70,9 @@ public class BookingServiceImpl implements BookingService{
 
 
         //Create the booking
-        User user=new User();
-        user.setId(1L);
+        //User user=new User();
+        //user.setId(1L);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         //userRepository.save(user);
         Booking booking = Booking.builder()
                 .booking_status(BookingStatus.RESERVED)
@@ -93,6 +96,10 @@ public class BookingServiceImpl implements BookingService{
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(()-> new ResourceNotFoundException(" Booking not found with ID +bookingId"));
 
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user.equals(booking.getUser())){
+            throw new UnautorizedException("Booking does not belongs to this user");
+        }
         if(checkBookingStatus(booking)){
             throw new IllegalStateException("Booking is already Expired");
         }
@@ -102,8 +109,8 @@ public class BookingServiceImpl implements BookingService{
         }
 
         for(GuestDto guestDto: guests){
-            User user=new User();
-            user.setId(1L);
+
+
             guestDto.setUser(user);
             Guest guest = modelMapper.map(guestDto, Guest.class);
             Guest saved_guest = guestRepository.save(guest);
